@@ -238,7 +238,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## License
 
-MIT © [Your Name]
+MIT © George Mugale
 
 ---
 
