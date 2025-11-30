@@ -1,0 +1,27 @@
+{
+  "name": "http-status",
+  "version": "1.0.0",
+  "description": "A lightweight, TypeScript-first response status handler for building consistent API responses. Provides a standardized way to structure success and error responses in your Node.js applications.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prepublishOnly": "npm test && npm run build"
+  },
+  "keywords": [
+    "http",
+    "status",
+    "response",
+    "api",
+    "typescript",
+    "error-handling"
+  ],
+  "author": "George Mgale",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/http-status"
+  }
+}
+
