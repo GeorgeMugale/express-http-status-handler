@@ -17,11 +17,11 @@
     "typescript",
     "error-handling"
   ],
-  "author": "George Mgale",
+  "author": "George Mugale",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/http-status"
+    "url": "https://github.com/GeorgeMugale/http-status"
   }
 }
 
