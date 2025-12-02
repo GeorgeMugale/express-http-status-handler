@@ -64,7 +64,7 @@ app.get('/user', (req, res) => {
 ## Installation
 
 ```bash
-npm install http-status-handler
+npm install express-http-status-handler
 ```
 
 ## Quick Start
