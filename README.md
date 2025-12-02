@@ -70,7 +70,7 @@ npm install express-http-status-handler
 ## Quick Start
 
 ```typescript
-import { Status, ErrorCode } from 'http-status-handler';
+import { Status, ErrorCode } from 'express-http-status-handler';
 
 // Simple usage
 const success = Status.success("User created", { id: 1, name: "John" });
@@ -89,7 +89,7 @@ status.successStatus({
 Here's how this package improves code quality in a production scenario:
 
 ```typescript
-import { Status, ErrorCode } from 'http-status-handler';
+import { Status, ErrorCode } from 'express-http-status-handler';
 import { Request, Response } from 'express';
 
 class AuthController {
