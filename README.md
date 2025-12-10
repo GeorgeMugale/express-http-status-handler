@@ -224,7 +224,7 @@ StatusCode.BAD_REQUEST          // 400
 StatusCode.UNAUTHORIZED         // 401
 StatusCode.FORBIDDEN            // 403
 StatusCode.NOT_FOUND            // 404
-StatusCode.VALIDATION_ERROR     // 422
+StatusCode.UNPROCESSABLE_CONTENT // 422
 StatusCode.INTERNAL_SERVER_ERROR // 500
 // ... and many more
 ```
