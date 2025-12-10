@@ -1,3 +1,4 @@
+````markdown
 # HTTP Status Handler
 
 A lightweight, TypeScript-first response status handler for building consistent API responses. This package provides a standardized way to structure success and error responses in your Node.js applications, ensuring consistent response formats across your API endpoints.
@@ -27,7 +28,7 @@ app.post('/user', (req, res) => {
     res.status(500).json({ message: error.message }); // Yet another structure
   }
 });
-```
+````
 
 ### ✅ Solution: Standardized Response Pattern
 
@@ -40,12 +41,14 @@ app.get('/user', (req, res) => {
   
   try {
     const user = getUser();
-    status.successStatus({ 
+    // Use successOK for standard 200 responses with data
+    status.successOK({ 
       message: "User retrieved successfully", 
       payload: user 
     });
   } catch (error) {
-    status.errorStatus(ErrorCode.NOT_FOUND);
+    // Use errorStatus with standard StatusCodes
+    status.errorStatus(StatusCode.NOT_FOUND);
   }
   
   return res.status(status.code).json(status); // Always proper status code + consistent structure
@@ -54,12 +57,12 @@ app.get('/user', (req, res) => {
 
 ## Features
 
-- ✅ **TypeScript Support**: Fully typed with generic support for payload data
-- ✅ **Standardized Response Format**: Consistent structure for all API responses
-- ✅ **HTTP Status Code Management**: Built-in handling for common HTTP status codes
-- ✅ **Error Code Mapping**: Predefined error messages for standard HTTP error codes
-- ✅ **Zero Dependencies**: Lightweight and framework-agnostic
-- ✅ **Comprehensive Documentation**: Full JSDoc support with examples
+  - ✅ **TypeScript Support**: Fully typed with generic support for payload data
+  - ✅ **Standardized Response Format**: Consistent structure for all API responses
+  - ✅ **HTTP Status Code Management**: Built-in handling for common HTTP status codes
+  - ✅ **Error Code Mapping**: Predefined error messages for standard HTTP error codes
+  - ✅ **Zero Dependencies**: Lightweight and framework-agnostic
+  - ✅ **Comprehensive Documentation**: Full JSDoc support with examples
 
 ## Installation
 
@@ -70,18 +73,23 @@ npm install http-status-handler
 ## Quick Start
 
 ```typescript
-import { Status, ErrorCode } from 'http-status-handler';
+import { Status, StatusCode } from 'http-status-handler';
 
-// Simple usage
-const success = Status.success("User created", { id: 1, name: "John" });
-const error = Status.ERR(ErrorCode.NOT_FOUND);
+// Static factory usage
+const success = Status.SUCCESS(StatusCode.CREATED, { id: 1, name: "John" });
+const error = Status.ERR(StatusCode.NOT_FOUND);
 
-// Advanced usage with instance
+// Instance usage
 const status = new Status<{ userId: number }>();
-status.successStatus({ 
+
+// For 200 OK with custom message/payload
+status.successOK({ 
   message: "Operation successful", 
   payload: { userId: 123 } 
 });
+
+// For specific status codes (e.g., 201 Created)
+status.successStatus(StatusCode.CREATED, { userId: 123 });
 ```
 
 ## Real-World Example
@@ -89,7 +97,7 @@ status.successStatus({
 Here's how this package improves code quality in a production scenario:
 
 ```typescript
-import { Status, ErrorCode } from 'http-status-handler';
+import { Status, StatusCode } from 'http-status-handler';
 import { Request, Response } from 'express';
 
 class AuthController {
@@ -125,23 +133,25 @@ class AuthController {
                 subject: MailSubject.ACCOUNT_VERIFIED,
               });
 
-              status.successStatus({
+              // Sets status to 200 OK and allows custom message
+              status.successOK({
                 message: "Account successfully verified.",
               });
             }
           } else {
             // Even if incorrect, maintain security by saying user cannot be found
-            status.errorStatus(ErrorCode.NOT_FOUND);
+            status.errorStatus(StatusCode.NOT_FOUND);
           }
         } else {
-          status.errorStatus(ErrorCode.NOT_FOUND);
+          status.errorStatus(StatusCode.NOT_FOUND);
         }
       } else {
-        status.errorStatus(ErrorCode.BAD_REQUEST);
+        status.errorStatus(StatusCode.BAD_REQUEST);
       }
     } catch (error) {
       console.error("error:", error);
-      status.errorStatus(ErrorCode.INTERNAL_SERVER_ERROR);
+      // Handles generic JS errors as 500 Internal Server Error
+      status.genericError(error);
     }
 
     // ✅ Always returns proper HTTP status code and consistent structure
@@ -152,11 +162,11 @@ class AuthController {
 
 ### Benefits Demonstrated in This Example:
 
-1. **Never Forget Status Codes**: The pattern enforces `res.status(status.code).json(status)`
-2. **Consistent Structure**: All responses have the same `{ code, success, message, payload }` format
-3. **Type Safety**: Generic types ensure payload consistency
-4. **Security**: Proper error handling without leaking implementation details
-5. **Maintainability**: Clear, predictable response patterns across all endpoints
+1.  **Never Forget Status Codes**: The pattern enforces `res.status(status.code).json(status)`
+2.  **Consistent Structure**: All responses have the same `{ code, success, message, payload }` format
+3.  **Type Safety**: Generic types ensure payload consistency
+4.  **Security**: Proper error handling without leaking implementation details
+5.  **Maintainability**: Clear, predictable response patterns across all endpoints
 
 ## API Reference
 
@@ -170,39 +180,53 @@ const status = new Status<T>(); // T is the payload type
 
 ### Static Methods
 
-#### `Status.success<T>(message: string, payload: T): Status<T>`
-Creates a success status (201 Created) with message and payload.
+#### `Status.SUCCESS<T>(success: StatusCode, payload: T): Status<T>`
 
-#### `Status.ERR<T>(error: ErrorCode): Status<T>`
-Creates an error status from an HTTP error code.
+Creates a new Status instance configured for success.
+
+#### `Status.ERR<T>(error: StatusCode): Status<T>`
+
+Creates a new Status instance configured for error.
 
 ### Instance Methods
 
-#### `successStatus(options: Partial<IStatus<T>>): void`
-Sets the status to success with provided options.
+#### `successStatus(success: StatusCode, payload?: T): void`
 
-#### `errorStatus(error: ErrorCode): void`
-Sets the status to error based on HTTP error code.
+Sets the status to a specific success code (e.g., 201 Created) and automatically sets the standard message for that code.
 
-#### `error(err: IHttpError): void`
-Handles custom errors implementing IHttpError interface.
+#### `successOK(options: Partial<IStatus<T>>): void`
 
-#### `genericError(err: Error): void`
-Handles generic JavaScript errors as internal server errors.
-
-### Error Codes
-
-Comprehensive HTTP status code coverage:
+A helper specifically for 200 OK responses. Allows you to easily override the message and payload.
 
 ```typescript
-ErrorCode.OK                    // 200
-ErrorCode.CREATED              // 201
-ErrorCode.BAD_REQUEST          // 400
-ErrorCode.UNAUTHORIZED         // 401
-ErrorCode.FORBIDDEN            // 403
-ErrorCode.NOT_FOUND            // 404
-ErrorCode.VALIDATION_ERROR     // 422
-ErrorCode.INTERNAL_SERVER_ERROR // 500
+status.successOK({ message: "Custom success message", payload: data });
+```
+
+#### `errorStatus(error: StatusCode): void`
+
+Sets the status to error based on HTTP status code and automatically sets the corresponding error message.
+
+#### `error(err: IHttpError): void`
+
+Handles custom errors that implement the `IHttpError` interface (must have a `code` property).
+
+#### `genericError(err: Error): void`
+
+Handles generic JavaScript errors. Automatically sets the code to 500 (Internal Server Error) and the message to the error's message.
+
+### Status Codes
+
+Comprehensive HTTP status code coverage via the `StatusCode` enum:
+
+```typescript
+StatusCode.OK                   // 200
+StatusCode.CREATED              // 201
+StatusCode.BAD_REQUEST          // 400
+StatusCode.UNAUTHORIZED         // 401
+StatusCode.FORBIDDEN            // 403
+StatusCode.NOT_FOUND            // 404
+StatusCode.VALIDATION_ERROR     // 422
+StatusCode.INTERNAL_SERVER_ERROR // 500
 // ... and many more
 ```
 
@@ -221,25 +245,28 @@ All responses follow this consistent format:
 
 ## About This Project
 
-### My First NPM Package! 🎉
+### My First NPM Package\! 🎉
 
 While this might seem like a trivial project, I'm proud to publish it as my first NPM package. It represents:
 
-- **Learning Journey**: Understanding the complete package creation and publishing process
-- **Real Problem Solving**: Addressing inconsistent API response patterns I've encountered
-- **Best Practices**: Implementing TypeScript, proper documentation, and testing
-- **Community Contribution**: Sharing a solution that might help other developers
+  - **Learning Journey**: Understanding the complete package creation and publishing process
+  - **Real Problem Solving**: Addressing inconsistent API response patterns I've encountered
+  - **Best Practices**: Implementing TypeScript, proper documentation, and testing
+  - **Community Contribution**: Sharing a solution that might help other developers
 
 This package embodies the principle that even simple utilities can significantly improve code quality when they enforce good patterns and prevent common mistakes.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for suggestions.
+Contributions are welcome\! Please feel free to submit pull requests or open issues for suggestions.
 
 ## License
 
 MIT © George Mugale
 
----
+-----
 
-**Never forget to set HTTP status codes again!** 🚀
+**Never forget to set HTTP status codes again\!** 🚀
+
+```
+```

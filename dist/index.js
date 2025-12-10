@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ErrorMessages = exports.ErrorCode = exports.Status = void 0;
+exports.StatusMessages = exports.StatusCode = exports.Status = void 0;
 var status_1 = require("./status");
 Object.defineProperty(exports, "Status", { enumerable: true, get: function () { return status_1.Status; } });
-var http_errors_js_1 = require("./http.errors.js");
-Object.defineProperty(exports, "ErrorCode", { enumerable: true, get: function () { return http_errors_js_1.ErrorCode; } });
-Object.defineProperty(exports, "ErrorMessages", { enumerable: true, get: function () { return http_errors_js_1.ErrorMessages; } });
+var http_status_js_1 = require("./http.status.js");
+Object.defineProperty(exports, "StatusCode", { enumerable: true, get: function () { return http_status_js_1.StatusCode; } });
+Object.defineProperty(exports, "StatusMessages", { enumerable: true, get: function () { return http_status_js_1.StatusMessages; } });

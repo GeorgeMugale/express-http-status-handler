@@ -1,4 +1,4 @@
-import { ErrorCode } from "./http.errors.js";
+import { StatusCode } from "./http.status.js";
 /**
  * Custom error interface that includes a status code
  * @extends Error
@@ -37,18 +37,15 @@ export interface IStatus<T = any> {
  *
  * @example
  * ```typescript
- * // Success response
- * const success = Status.success("User created", { id: 1, name: "John" });
- *
- * // Error response from error code
- * const error = Status.ERR(ErrorCode.NOT_FOUND);
- *
- * // Instance usage
  * const status = new Status<{ userId: number }>();
- * status.successStatus({
- *   message: "Operation successful",
- *   payload: { userId: 123 }
- * });
+ * const { details } = req.body;
+ *
+ * if (details) {
+ *  status.successStatus(StatusCode.CREATED, { userId: 123 });
+ * } else {
+ *  status.errorStatus(StatusCode.BAD_REQUEST);
+ * }
+ * return res.status(status.code).json(status);
  * ```
  */
 export declare class Status<T = any> implements IStatus<T> {
@@ -74,30 +71,17 @@ export declare class Status<T = any> implements IStatus<T> {
     private set;
     /**
      * Sets the status to success with provided options
-     * @param options - Success response options
-     * @param options.message - Success message
-     * @param options.payload - Success payload data
+     * Automatically sets the appropriate success status message
+     * @param success - Success response options
+     * @param payload - Optional success payload data
      */
-    successStatus(options: Partial<IStatus<T>>): void;
+    successStatus(success: StatusCode, payload?: T): void;
     /**
-     * Sets the status to error based on an HTTP error code
-     * Automatically sets the appropriate error message
-     * @param error - The HTTP error code
+     * Sets the status to error based on an HTTP status code
+     * Automatically sets the appropriate error status message
+     * @param error - The HTTP error code from status codes
      */
-    errorStatus(error: ErrorCode): void;
-    /**
-     * Static factory method to create a success status
-     * @template T - The type of the payload data
-     * @param message - Success message
-     * @param payload - Success payload data
-     * @returns A new Status instance configured for success
-     *
-     * @example
-     * ```typescript
-     * const status = Status.success("User created", { id: 1, name: "John" });
-     * ```
-     */
-    static success<T>(message: string, payload: T): Status<T>;
+    errorStatus(error: StatusCode): void;
     /**
      * Static factory method to create an error status from an HTTP error code
      * @template T - The type of the payload data
@@ -106,10 +90,23 @@ export declare class Status<T = any> implements IStatus<T> {
      *
      * @example
      * ```typescript
-     * const status = Status.ERR(ErrorCode.NOT_FOUND);
+     * const status = Status.ERR(StatusCode.NOT_FOUND);
      * ```
      */
-    static ERR<T>(error: ErrorCode): Status<T>;
+    static ERR<T>(error: StatusCode): Status<T>;
+    /**
+     * Static factory method to create a success status
+     * @template T - The type of the payload data
+     * @param success - Success status code
+     * @param payload - Success payload data
+     * @returns A new Status instance configured for success
+     *
+     * @example
+     * ```typescript
+     * const status = Status.SUCCESS(StatusCode.CREATED, { id: 1, name: "John" });
+     * ```
+     */
+    static SUCCESS<T>(success: StatusCode, payload: T): Status<T>;
     /**
      * Handles custom errors that implement the IHttpError interface
      * @param err - Custom error object with code property
@@ -122,6 +119,17 @@ export declare class Status<T = any> implements IStatus<T> {
      * ```
      */
     error(err: IHttpError): void;
+    /**
+     * Sets the status to success with provided options and default OK status code
+     * @param options - Success response options
+     * @param options.message - Success message
+     * @param options.payload - Success payload data
+     *    * @example
+     * ```typescript
+     * status.successOK({message: "User created", payload: { id: 1, name: "John" }});
+     * ```
+     */
+    successOK(options: Partial<IStatus<T>>): void;
     /**
      * Handles generic JavaScript errors as internal server errors
      * Use this as a fallback for unexpected errors
