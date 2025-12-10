@@ -67,13 +67,13 @@ app.get('/user', (req, res) => {
 ## Installation
 
 ```bash
-npm install http-status-handler
+npm install express-http-status-handler
 ```
 
 ## Quick Start
 
 ```typescript
-import { Status, StatusCode } from 'http-status-handler';
+import { Status, ErrorCode } from 'express-http-status-handler';
 
 // Static factory usage
 const success = Status.SUCCESS(StatusCode.CREATED, { id: 1, name: "John" });
@@ -97,7 +97,7 @@ status.successStatus(StatusCode.CREATED, { userId: 123 });
 Here's how this package improves code quality in a production scenario:
 
 ```typescript
-import { Status, StatusCode } from 'http-status-handler';
+import { Status, ErrorCode } from 'http-status-handler';
 import { Request, Response } from 'express';
 
 class AuthController {
@@ -268,5 +268,4 @@ MIT © George Mugale
 
 **Never forget to set HTTP status codes again\!** 🚀
 
-```
-```
+**Never forget to set HTTP status codes again!** 🚀
