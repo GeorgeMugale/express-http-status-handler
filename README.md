@@ -1,4 +1,3 @@
-````markdown
 # HTTP Status Handler
 
 A lightweight, TypeScript-first response status handler for building consistent API responses. This package provides a standardized way to structure success and error responses in your Node.js applications, ensuring consistent response formats across your API endpoints.
@@ -97,7 +96,7 @@ status.successStatus(StatusCode.CREATED, { userId: 123 });
 Here's how this package improves code quality in a production scenario:
 
 ```typescript
-import { Status, ErrorCode } from 'http-status-handler';
+import { Status, ErrorCode } from 'express-http-status-handler';
 import { Request, Response } from 'express';
 
 class AuthController {
@@ -268,4 +267,5 @@ MIT © George Mugale
 
 **Never forget to set HTTP status codes again\!** 🚀
 
-**Never forget to set HTTP status codes again!** 🚀
+```
+```
