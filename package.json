@@ -1,6 +1,6 @@
 {
   "name": "express-http-status-handler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, TypeScript-first response status handler for building consistent API responses. Provides a standardized way to structure success and error responses in your Node.js applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
